@@ -72,19 +72,23 @@ char *para_info(para *p) {
 
 int para_equal(para *p, para *q) {
   if (p == NULL || q == NULL) {
+    filesequal = 0;
     return 0;
   }
 
   if (para_size(p) != para_size(q)) {
+    filesequal = 0;
     return 0;
   }
 
   if (p->start >= p->filesize || q->start >= q->filesize) {
+    filesequal = 0;
     return 0;
   }
 
   int i = p->start, j = q->start, equal = 0;
-  while ((equal = strcmp(p->base[i], q->base[i])) == 0) {
+  while (p->base[i] != '\0' && q->base[i] != '\0' &&
+         (equal = strcmp(p->base[i], q->base[j])) == 0) {
     ++i;
     ++j;
   }

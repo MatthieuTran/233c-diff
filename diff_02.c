@@ -31,7 +31,7 @@ void version(void) {
   printf("under the terms of the GNU General Public License.\n");
   printf("For more information about these matters, see the file named "
          "COPYING.\n");
-  printf("Written by William McCarthy, Tony Stark, and Dr. Steven Strange\n");
+  printf("Written by William McCarthy, Tony Stark, and Dr. Steven Strange\n\n");
 }
 
 void todo_list(void) {
@@ -47,7 +47,7 @@ char *strings1[MAXSTRINGS], *strings2[MAXSTRINGS];
 int showversion = 0, showbrief = 0, ignorecase = 0, report_identical = 0,
     showsidebyside = 0;
 int showleftcolumn = 0, showunified = 0, showcontext = 0, suppresscommon = 0,
-    diffnormal = 0;
+    diffnormal = 0, filesequal = 1;
 
 int count1 = 0, count2 = 0;
 
@@ -103,9 +103,10 @@ void showoptions(const char *file1, const char *file2) {
   printline();
 }
 
+const char *files[2] = {NULL, NULL};
+
 void init_options_files(int argc, const char *argv[]) {
   int cnt = 0;
-  const char *files[2] = {NULL, NULL};
 
   while (argc-- > 0) {
     const char *arg = *argv;
@@ -172,6 +173,11 @@ int main(int argc, const char *argv[]) {
       q = para_next(q);
     }
 
+    if (foundmatch == 0 && showbrief) {
+      printf("Files %s and %s differ.\n", files[0], files[1]);
+      exit(0);
+    }
+
     q = qlast;
 
     if (foundmatch) {
@@ -181,7 +187,10 @@ int main(int argc, const char *argv[]) {
         qlast = q;
       }
 
-      para_print(q, printboth);
+      if (showsidebyside && !suppresscommon) {
+        para_print(q, printboth);
+      }
+
       p = para_next(p);
       q = para_next(q);
     } else {
@@ -193,6 +202,10 @@ int main(int argc, const char *argv[]) {
   while (q != NULL) {
     para_print(q, printright);
     q = para_next(q);
+  }
+
+  if (filesequal) {
+    printf("Files %s and %s are identical\n", files[0], files[1]);
   }
 
   return 0;

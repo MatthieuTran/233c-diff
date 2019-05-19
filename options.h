@@ -11,5 +11,6 @@ extern int showunified;
 extern int showcontext;
 extern int suppresscommon;
 extern int diffnormal;
+extern int filesequal;
 
 #endif
