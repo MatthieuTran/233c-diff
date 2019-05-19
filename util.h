@@ -9,6 +9,7 @@
 #ifndef util_h
 #define util_h
 
+#include "options.h"
 #include <stdio.h>
 #define BUFLEN 256
 

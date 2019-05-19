@@ -7,6 +7,7 @@
 //
 
 #include "para.h"
+#include "options.h"
 #include "util.h"
 #include <stdlib.h>
 #include <string.h>

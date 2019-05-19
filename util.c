@@ -7,6 +7,7 @@
 //
 
 #include "util.h"
+#include "options.h"
 #include <stdlib.h>
 #include <string.h>
 
@@ -15,6 +16,7 @@
 char *yesorno(int condition) { return condition == 0 ? "no" : "YES"; }
 
 FILE *openfile(const char *filename, const char *openflags) {
+  printf("%d", diffnormal);
   FILE *f;
   if ((f = fopen(filename, openflags)) == NULL) {
     printf("can't open '%s'\n", filename);
