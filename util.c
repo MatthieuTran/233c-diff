@@ -60,11 +60,14 @@ void printright(const char *right) {
   if (showbrief) {
     return;
   }
+
   if (right == NULL) {
     return;
   }
 
-  if (showsidebyside) {
+  if (showunified) {
+    printf("%s %s", ">", right);
+  } else if (showsidebyside) {
     printf("%50s %s", ">", right);
   } else {
     printf("%s %s", ">", right);
@@ -83,14 +86,19 @@ void printboth(const char *left_right) {
   }
   buf[len - 1] = '\0';
 
-  if (showleftcolumn) {
+  if (showleftcolumn || showunified) {
     char *lp = (char *)left_right;
     while (*lp != '\n') {
       lp++;
     }
     *lp = '\0';
 
-    printf("%-50s)\n", left_right);
+    printf("%-50s", left_right);
+    if (showleftcolumn) {
+      printf(")");
+    }
+
+    printf("\n");
   } else {
     printf("%-50s %s", buf, left_right);
   }

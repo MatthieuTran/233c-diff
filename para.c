@@ -33,6 +33,19 @@ para *para_first(char *base[], int size) {
   return para_next(p);
 }
 
+int para_lines(para *p) {
+  int i = 0, lines = 0;
+  while (i < p->filesize) {
+    if (*p->base[i] == '\n') {
+      ++lines;
+    }
+
+    ++i;
+  }
+
+  return lines + 1;
+}
+
 void para_destroy(para *p) { free(p); }
 
 para *para_next(para *p) {

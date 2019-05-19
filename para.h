@@ -22,6 +22,7 @@ struct para {
 };
 
 para *para_make(char *base[], int size, int start, int stop);
+int para_lines(para *p);
 para *para_first(char *base[], int size);
 para *para_next(para *p);
 size_t para_filesize(para *p);

@@ -119,7 +119,8 @@ void init_options_files(int argc, const char *argv[]) {
     setoption(arg, "--left-column", NULL, &showleftcolumn);
     setoption(arg, "--suppress-common-lines", NULL, &suppresscommon);
     setoption(arg, "-c", "--context", &showcontext);
-    setoption(arg, "-u", "showunified", &showunified);
+    setoption(arg, "-u", "--unified", &showunified);
+
     if (arg[0] != '-') {
       if (cnt == 2) {
         fprintf(stderr,
@@ -155,6 +156,7 @@ void init_options_files(int argc, const char *argv[]) {
 }
 
 int main(int argc, const char *argv[]) {
+  int left_current = 0, right_current = 0;
   init_options_files(--argc, ++argv);
 
   //  para_printfile(strings1, count1, printleft);
@@ -171,6 +173,7 @@ int main(int argc, const char *argv[]) {
 
     while (q != NULL && (foundmatch = para_equal(p, q)) == 0) {
       q = para_next(q);
+      left_current += para_lines(p);
     }
 
     if (foundmatch == 0 && showbrief) {
@@ -182,24 +185,40 @@ int main(int argc, const char *argv[]) {
 
     if (foundmatch) {
       while ((foundmatch = para_equal(p, q)) == 0) {
+        if (diffnormal) {
+          printf("%da%d,%d\n", right_current, right_current + 1,
+                 right_current + para_lines(q) + 1);
+        }
+        right_current += para_lines(q);
         para_print(q, printright);
         q = para_next(q);
         qlast = q;
       }
 
-      if (showsidebyside && !suppresscommon) {
+      if ((showsidebyside || showunified) && !suppresscommon) {
         para_print(q, printboth);
       }
 
+      right_current += para_lines(q);
       p = para_next(p);
       q = para_next(q);
     } else {
+      if (diffnormal) {
+
+        printf("%d,%dd%d\n", left_current - 1, left_current + para_lines(p) - 1,
+               left_current + para_lines(p));
+      }
       para_print(p, printleft);
       p = para_next(p);
     }
   }
 
   while (q != NULL) {
+    if (diffnormal) {
+      right_current += para_lines(q);
+      printf("%da%d,%d\n", right_current, right_current + 1,
+             right_current + para_lines(q) + 1);
+    }
     para_print(q, printright);
     q = para_next(q);
   }
